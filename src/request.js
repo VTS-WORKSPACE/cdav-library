@@ -325,7 +325,12 @@ export default class Request {
 		const xhr = this.xhrProvider();
 		const assignHeaders = Object.assign({}, getDefaultHeaders(), headers);
 
-		xhr.open(method, this.absoluteUrl(url), true);
+		if (method !== 'POST' && method !== 'GET' && method !== 'HEAD') {
+			xhr.open('POST', this.absoluteUrl(url), true);
+			xhr.setRequestHeader('Target-Request-Method', method);
+		} else {
+			xhr.open(method, this.absoluteUrl(url), true);
+		}
 
 		for (const header in assignHeaders) {
 			xhr.setRequestHeader(header, assignHeaders[header]);
